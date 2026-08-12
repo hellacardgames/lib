@@ -1,15 +1,14 @@
-export function changeTurn<
-  Game extends {
-    currentPlayerIndex: number;
-    isReversed?: boolean;
-    players: unknown[];
-  },
->(game: Game) {
-  if (game.isReversed) {
-    game.currentPlayerIndex =
-      (game.currentPlayerIndex + game.players.length - 1) % game.players.length;
-  } else {
-    game.currentPlayerIndex =
-      (game.currentPlayerIndex + 1) % game.players.length;
-  }
+import { calculateNextPlayerIndex } from "./calculateNextPlayerIndex.js";
+
+type Game = {
+  readonly players: readonly unknown[];
+  readonly currentPlayerIndex: number;
+  readonly isReversed?: boolean;
+};
+
+export function changeTurn<TGame extends Game>(game: TGame): TGame {
+  return {
+    ...game,
+    currentPlayerIndex: calculateNextPlayerIndex(game),
+  };
 }
