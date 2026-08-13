@@ -150,6 +150,17 @@ test("wraps turn to last player when reversed and current first player removed",
   expect(game.players[game.currentPlayerIndex]).toBe(player3);
 });
 
+test("does not change turn when last player is removed", () => {
+  const game = {
+    players: [{ id: "player-id-001" }],
+    currentPlayerIndex: 0,
+  };
+
+  const result = removePlayer(game, "player-id-001");
+
+  expect(result.turnChanged).toBe(false);
+});
+
 test("throws when player does not exist in game", () => {
   const player1 = { id: "player-id-001" };
 

@@ -23,7 +23,7 @@ export function removePlayer<TGame extends Game>(
 
   let turnChanged = false;
 
-  if (index === game.currentPlayerIndex) {
+  if (index === game.currentPlayerIndex && game.players.length > 1) {
     game = changeTurn(game);
     turnChanged = true;
   }
