@@ -1,6 +1,6 @@
 {
   "name": "@hellacardgames/lib",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "A TypeScript library shared by the various card game implementation libraries.",
   "type": "module",
   "license": "MIT",
