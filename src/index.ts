@@ -7,6 +7,7 @@ export { getCurrentPlayer } from "./lib/getCurrentPlayer.js";
 export { getEventsAndClearAcknowledged } from "./lib/getEventsAndClearAcknowledged.js";
 export { getNextPlayer } from "./lib/getNextPlayer.js";
 export { isCurrentPlayer } from "./lib/isCurrentPlayer.js";
+export { ManagerBase } from "./lib/ManagerBase.js";
 export { prependItemToCollection } from "./lib/prependItemToCollection.js";
 export { removeItemFromCollection } from "./lib/removeItemFromCollection.js";
 export { removePlayer } from "./lib/removePlayer.js";
