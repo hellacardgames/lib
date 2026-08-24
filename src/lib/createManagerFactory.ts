@@ -1,3 +1,6 @@
+import { sendChat as doSendChat } from "../helpers/sendChat.js";
+import type { ChatMessage } from "../types/ChatMessage.js";
+
 type Params<
   TGame extends Game,
   TClientState extends object,
@@ -6,7 +9,6 @@ type Params<
   TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
-  TSendChatError extends string,
   TStartGameError extends string,
   TCustomActions extends CustomActions,
 > = {
@@ -45,13 +47,6 @@ type Params<
   ) =>
     { success: true; game: TGame } | { success: false; error: TLeaveGameError };
 
-  readonly sendChat: (
-    game: TGame,
-    playerId: string,
-    text: string,
-  ) =>
-    { success: true; game: TGame } | { success: false; error: TSendChatError };
-
   readonly startGame: (
     game: CreatedGame<TGame>,
     playerId: string,
@@ -72,25 +67,53 @@ type Game =
       status: "created";
       id: string;
       expiresAt: number;
-      players: readonly object[];
+      players: readonly {
+        id: string;
+        username: string;
+        events: readonly {
+          id: string;
+        }[];
+      }[];
+      chatMessages: readonly ChatMessage[];
     }
   | {
       status: "started";
       id: string;
       expiresAt: number;
-      players: readonly object[];
+      players: readonly {
+        id: string;
+        username: string;
+        events: readonly {
+          id: string;
+        }[];
+      }[];
+      chatMessages: readonly ChatMessage[];
     }
   | {
       status: "forfeited";
       id: string;
       expiresAt: number;
-      players: readonly object[];
+      players: readonly {
+        id: string;
+        username: string;
+        events: readonly {
+          id: string;
+        }[];
+      }[];
+      chatMessages: readonly ChatMessage[];
     }
   | {
       status: "completed";
       id: string;
       expiresAt: number;
-      players: readonly object[];
+      players: readonly {
+        id: string;
+        username: string;
+        events: readonly {
+          id: string;
+        }[];
+      }[];
+      chatMessages: readonly ChatMessage[];
     };
 
 type CustomActions = {
@@ -106,7 +129,6 @@ export function createManagerFactory<
   TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
-  TSendChatError extends string,
   TStartGameError extends string,
   TCustomActions extends CustomActions,
 >(
@@ -118,7 +140,6 @@ export function createManagerFactory<
     TGetEventsAndClearAcknowledgedError,
     TJoinGameError,
     TLeaveGameError,
-    TSendChatError,
     TStartGameError,
     TCustomActions
   >,
@@ -233,7 +254,7 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      const result = params.sendChat(game, playerId, text);
+      const result = doSendChat(game, playerId, text);
       if (!result.success) {
         return { success: false as const, error: result.error } as const;
       }

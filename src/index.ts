@@ -16,3 +16,5 @@ export { requirePlayer } from "./lib/requirePlayer.js";
 export { shuffle } from "./lib/shuffle.js";
 export { takeLastItemFromCollection } from "./lib/takeLastItemFromCollection.js";
 export { updatePlayer } from "./lib/updatePlayer.js";
+
+export type { ChatMessage } from "./types/ChatMessage.js";

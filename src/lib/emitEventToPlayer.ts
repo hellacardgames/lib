@@ -1,23 +1,22 @@
 import { updatePlayer } from "./updatePlayer.js";
 
-type Game = {
+type Game<TEvent extends GameEvent> = {
   readonly players: readonly {
     readonly id: string;
-    readonly events: readonly {
-      readonly id: string;
-    }[];
+    readonly events: readonly TEvent[];
   }[];
 };
 
-type Event<TGame extends Game> = TGame["players"][number]["events"][number];
+type GameEvent = {
+  readonly id: string;
+};
 
 type OmitId<T> = T extends unknown ? Omit<T, "id"> : never;
 
-export function emitEventToPlayer<TGame extends Game>(
-  game: TGame,
-  playerId: string,
-  data: OmitId<Event<TGame>>,
-): TGame {
+export function emitEventToPlayer<
+  TEvent extends GameEvent,
+  TGame extends Game<TEvent>,
+>(game: TGame, playerId: string, data: OmitId<TEvent>): TGame {
   return updatePlayer(game, playerId, (p) => ({
     ...p,
     events: [...p.events, { ...data, id: crypto.randomUUID() }],
