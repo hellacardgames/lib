@@ -58,8 +58,8 @@ type Params<
   ) =>
     { success: true; game: TGame } | { success: false; error: TStartGameError };
 
-  readonly createCustomActions: (
-    games: Map<string, TGame>,
+  readonly addCustomActions: (
+    wrapAction: ReturnType<typeof wrapActionFactory<TGame>>,
   ) => Readonly<TCustomActions>;
 };
 
@@ -70,10 +70,8 @@ type Game = {
   players: readonly object[];
 };
 
-type CustomActions = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [P in string]: (...args: any[]) => object;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CustomActions = Record<string, (...args: any[]) => object>;
 
 export function createManagerFactory<
   TGame extends Game,
@@ -228,6 +226,8 @@ export function createManagerFactory<
       return { success: true } as const;
     }
 
+    const wrapAction = wrapActionFactory<TGame>(games);
+
     return {
       createGame,
       getClientStateAndClearEvents,
@@ -237,7 +237,7 @@ export function createManagerFactory<
       leaveGame,
       sendChat,
       startGame,
-      ...params.createCustomActions(games),
+      ...params.addCustomActions(wrapAction),
     } as const;
   };
 }
@@ -268,4 +268,31 @@ class Watchdog<TGame extends Game> {
       }
     }
   }
+}
+
+function wrapActionFactory<TGame>(games: Map<string, TGame>) {
+  function wrapAction<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    TArgs extends any[],
+    TError extends string,
+  >(
+    action: (
+      game: TGame,
+      ...args: TArgs
+    ) => { success: true; game: TGame } | { success: false; error: TError },
+  ) {
+    return (gameId: string, ...args: TArgs) => {
+      const game = games.get(gameId);
+      if (!game) {
+        return { success: false, error: "gameNotFound" } as const;
+      }
+      const result = action(game, ...args);
+      if (!result.success) {
+        return { success: false, error: result.error } as const;
+      }
+      games.set(gameId, result.game);
+      return { success: true } as const;
+    };
+  }
+  return wrapAction;
 }
