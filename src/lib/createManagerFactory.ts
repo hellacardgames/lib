@@ -32,11 +32,11 @@ type Params<
     | { success: false; error: TGetEventsAndClearAcknowledgedError };
 
   readonly joinGame: (
-    game: CreatedGame<TGame>,
+    game: TGame,
     userId: string,
     username: string,
   ) =>
-    | { success: true; game: CreatedGame<TGame>; playerId: string }
+    | { success: true; game: TGame; playerId: string }
     | { success: false; error: TJoinGameError };
 
   readonly leaveGame: (
@@ -53,45 +53,22 @@ type Params<
     { success: true; game: TGame } | { success: false; error: TSendChatError };
 
   readonly startGame: (
-    game: CreatedGame<TGame>,
+    game: TGame,
     playerId: string,
   ) =>
-    | { success: true; game: StartedGame<TGame> }
-    | { success: false; error: TStartGameError };
+    { success: true; game: TGame } | { success: false; error: TStartGameError };
 
   readonly createCustomActions: (
     games: Map<string, TGame>,
   ) => Readonly<TCustomActions>;
 };
 
-type CreatedGame<TGame extends Game> = Extract<TGame, { status: "created" }>;
-type StartedGame<TGame extends Game> = Extract<TGame, { status: "started" }>;
-
-type Game =
-  | {
-      status: "created";
-      id: string;
-      expiresAt: number;
-      players: readonly object[];
-    }
-  | {
-      status: "started";
-      id: string;
-      expiresAt: number;
-      players: readonly object[];
-    }
-  | {
-      status: "forfeited";
-      id: string;
-      expiresAt: number;
-      players: readonly object[];
-    }
-  | {
-      status: "completed";
-      id: string;
-      expiresAt: number;
-      players: readonly object[];
-    };
+type Game = {
+  status: "created" | "started" | "forfeited" | "completed";
+  id: string;
+  expiresAt: number;
+  players: readonly object[];
+};
 
 type CustomActions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -200,9 +177,6 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      if (!isCreatedGame(game)) {
-        return { success: false, error: "invalidStatus" } as const;
-      }
       const result = params.joinGame(game, userId, username);
       if (!result.success) {
         return { success: false as const, error: result.error } as const;
@@ -246,9 +220,6 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      if (!isCreatedGame(game)) {
-        return { success: false, error: "invalidStatus" } as const;
-      }
       const result = params.startGame(game, playerId);
       if (!result.success) {
         return { success: false as const, error: result.error } as const;
@@ -269,12 +240,6 @@ export function createManagerFactory<
       ...params.createCustomActions(games),
     } as const;
   };
-}
-
-function isCreatedGame<TGame extends Game>(
-  game: TGame,
-): game is Extract<TGame, { status: "created" }> {
-  return game.status === "created";
 }
 
 class Watchdog<TGame extends Game> {
