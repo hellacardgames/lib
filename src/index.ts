@@ -1,3 +1,6 @@
+export { getEventsAndClearAcknowledged } from "./actions/getEventsAndClearAcknowledged.js";
+export { sendChat } from "./actions/sendChat.js";
+
 export { addItemToCollection } from "./lib/addItemToCollection.js";
 export { calculateNextPlayerIndex } from "./lib/calculateNextPlayerIndex.js";
 export { changeTurn } from "./lib/changeTurn.js";

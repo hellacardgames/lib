@@ -1,13 +1,12 @@
-import { getEventsAndClearAcknowledged as doGetEventsAndClearAcknowledged } from "../helpers/getEventsAndClearAcknowledged.js";
-import { sendChat as doSendChat } from "../helpers/sendChat.js";
-import type { ChatMessage } from "../types/ChatMessage.js";
-
 type Params<
   TGame extends Game,
   TClientState extends object,
+  TGameEvent extends object,
   TGetClientStateAndClearEventsError extends string,
+  TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
+  TSendChatError extends string,
   TStartGameError extends string,
   TCustomActions extends CustomActions,
 > = {
@@ -24,6 +23,14 @@ type Params<
     | { success: true; game: TGame; state: TClientState }
     | { success: false; error: TGetClientStateAndClearEventsError };
 
+  readonly getEventsAndClearAcknowledged: (
+    game: TGame,
+    playerId: string,
+    lastReadId: string | null,
+  ) =>
+    | { success: true; game: TGame; events: readonly TGameEvent[] }
+    | { success: false; error: TGetEventsAndClearAcknowledgedError };
+
   readonly joinGame: (
     game: CreatedGame<TGame>,
     userId: string,
@@ -37,6 +44,13 @@ type Params<
     playerId: string,
   ) =>
     { success: true; game: TGame } | { success: false; error: TLeaveGameError };
+
+  readonly sendChat: (
+    game: TGame,
+    playerId: string,
+    text: string,
+  ) =>
+    { success: true; game: TGame } | { success: false; error: TSendChatError };
 
   readonly startGame: (
     game: CreatedGame<TGame>,
@@ -58,53 +72,25 @@ type Game =
       status: "created";
       id: string;
       expiresAt: number;
-      players: readonly {
-        id: string;
-        username: string;
-        events: readonly {
-          id: string;
-        }[];
-      }[];
-      chatMessages: readonly ChatMessage[];
+      players: readonly object[];
     }
   | {
       status: "started";
       id: string;
       expiresAt: number;
-      players: readonly {
-        id: string;
-        username: string;
-        events: readonly {
-          id: string;
-        }[];
-      }[];
-      chatMessages: readonly ChatMessage[];
+      players: readonly object[];
     }
   | {
       status: "forfeited";
       id: string;
       expiresAt: number;
-      players: readonly {
-        id: string;
-        username: string;
-        events: readonly {
-          id: string;
-        }[];
-      }[];
-      chatMessages: readonly ChatMessage[];
+      players: readonly object[];
     }
   | {
       status: "completed";
       id: string;
       expiresAt: number;
-      players: readonly {
-        id: string;
-        username: string;
-        events: readonly {
-          id: string;
-        }[];
-      }[];
-      chatMessages: readonly ChatMessage[];
+      players: readonly object[];
     };
 
 type CustomActions = {
@@ -115,18 +101,24 @@ type CustomActions = {
 export function createManagerFactory<
   TGame extends Game,
   TClientState extends object,
+  TGameEvent extends object,
   TGetClientStateAndClearEventsError extends string,
+  TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
+  TSendChatError extends string,
   TStartGameError extends string,
   TCustomActions extends CustomActions,
 >(
   params: Params<
     TGame,
     TClientState,
+    TGameEvent,
     TGetClientStateAndClearEventsError,
+    TGetEventsAndClearAcknowledgedError,
     TJoinGameError,
     TLeaveGameError,
+    TSendChatError,
     TStartGameError,
     TCustomActions
   >,
@@ -172,7 +164,7 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      const result = doGetEventsAndClearAcknowledged(
+      const result = params.getEventsAndClearAcknowledged(
         game,
         playerId,
         lastReadId,
@@ -241,7 +233,7 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      const result = doSendChat(game, playerId, text);
+      const result = params.sendChat(game, playerId, text);
       if (!result.success) {
         return { success: false as const, error: result.error } as const;
       }
