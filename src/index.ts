@@ -6,7 +6,6 @@ export { createServerFactory } from "./lib/createServerFactory.js";
 export { emitEvent } from "./lib/emitEvent.js";
 export { emitEventToPlayer } from "./lib/emitEventToPlayer.js";
 export { getCurrentPlayer } from "./lib/getCurrentPlayer.js";
-export { getEventsAndClearAcknowledged } from "./lib/getEventsAndClearAcknowledged.js";
 export { getNextPlayer } from "./lib/getNextPlayer.js";
 export { isCurrentPlayer } from "./lib/isCurrentPlayer.js";
 export { prependItemToCollection } from "./lib/prependItemToCollection.js";

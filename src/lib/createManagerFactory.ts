@@ -1,12 +1,11 @@
+import { getEventsAndClearAcknowledged as doGetEventsAndClearAcknowledged } from "../helpers/getEventsAndClearAcknowledged.js";
 import { sendChat as doSendChat } from "../helpers/sendChat.js";
 import type { ChatMessage } from "../types/ChatMessage.js";
 
 type Params<
   TGame extends Game,
   TClientState extends object,
-  TGameEvent extends object,
   TGetClientStateAndClearEventsError extends string,
-  TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
   TStartGameError extends string,
@@ -24,14 +23,6 @@ type Params<
   ) =>
     | { success: true; game: TGame; state: TClientState }
     | { success: false; error: TGetClientStateAndClearEventsError };
-
-  readonly getEventsAndClearAcknowledged: (
-    game: TGame,
-    playerId: string,
-    lastReadId: string | null,
-  ) =>
-    | { success: true; game: TGame; events: readonly TGameEvent[] }
-    | { success: false; error: TGetEventsAndClearAcknowledgedError };
 
   readonly joinGame: (
     game: CreatedGame<TGame>,
@@ -124,9 +115,7 @@ type CustomActions = {
 export function createManagerFactory<
   TGame extends Game,
   TClientState extends object,
-  TGameEvent extends object,
   TGetClientStateAndClearEventsError extends string,
-  TGetEventsAndClearAcknowledgedError extends string,
   TJoinGameError extends string,
   TLeaveGameError extends string,
   TStartGameError extends string,
@@ -135,9 +124,7 @@ export function createManagerFactory<
   params: Params<
     TGame,
     TClientState,
-    TGameEvent,
     TGetClientStateAndClearEventsError,
-    TGetEventsAndClearAcknowledgedError,
     TJoinGameError,
     TLeaveGameError,
     TStartGameError,
@@ -185,7 +172,7 @@ export function createManagerFactory<
       if (!game) {
         return { success: false, error: "gameNotFound" } as const;
       }
-      const result = params.getEventsAndClearAcknowledged(
+      const result = doGetEventsAndClearAcknowledged(
         game,
         playerId,
         lastReadId,

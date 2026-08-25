@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getEventsAndClearAcknowledged } from "./getEventsAndClearAcknowledged.js";
+import { doGetEventsAndClearAcknowledged } from "./doGetEventsAndClearAcknowledged.js";
 
 type Game = {
   players: Player[];
@@ -29,7 +29,7 @@ test("returns all events and purges none when lastReadId is null", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(game, "player-id-001", null);
+  const result = doGetEventsAndClearAcknowledged(game, "player-id-001", null);
 
   expect(result.events).toEqual([
     { type: "some-event", id: "event-id-001" },
@@ -64,7 +64,7 @@ test("returns all events and purges none when lastReadId is not found", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(
+  const result = doGetEventsAndClearAcknowledged(
     game,
     "player-id-001",
     "non-existent-id",
@@ -103,7 +103,7 @@ test("purges acknowledged events and returns unread events", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(
+  const result = doGetEventsAndClearAcknowledged(
     game,
     "player-id-001",
     "event-id-002",
@@ -138,7 +138,7 @@ test("acknowledges the first event", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(
+  const result = doGetEventsAndClearAcknowledged(
     game,
     "player-id-001",
     "event-id-001",
@@ -175,7 +175,7 @@ test("acknowledges the last event", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(
+  const result = doGetEventsAndClearAcknowledged(
     game,
     "player-id-001",
     "event-id-005",
@@ -195,7 +195,7 @@ test("returns no events when there are no events", () => {
     players: [player],
   };
 
-  const result = getEventsAndClearAcknowledged(game, "player-id-001", null);
+  const result = doGetEventsAndClearAcknowledged(game, "player-id-001", null);
 
   expect(result.events).toEqual([]);
   expect(result.game.players[0]?.events).toEqual([]);
