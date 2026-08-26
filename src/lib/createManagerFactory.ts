@@ -196,6 +196,8 @@ export function createManagerFactory<
       return { success: true } as const;
     }
 
+    const gameplayActions = wrapActions(params.gameplayActions, games);
+
     return {
       createGame,
       getClientStateAndClearEvents,
@@ -205,7 +207,8 @@ export function createManagerFactory<
       leaveGame,
       sendChat: wrapAction(params.sendChat, games),
       startGame: wrapAction(params.startGame, games),
-      ...wrapActions(params.gameplayActions, games),
+      ...gameplayActions,
+      gameplayActions,
     } as const;
   };
 }
@@ -241,7 +244,7 @@ class Watchdog<TGame extends Game> {
 function wrapActions<TGame, TActions extends Record<string, unknown>>(
   actions: TActions & ConstrainGameActions<TGame, TActions>,
   games: Map<string, TGame>,
-): WrappedActions<TGame, TActions> {
+): Readonly<WrappedActions<TGame, TActions>> {
   const wrapped = {} as WrappedActions<TGame, TActions>;
   for (const key of Object.keys(actions) as Array<keyof TActions>) {
     wrapped[key] = wrapAction(actions[key] as never, games) as WrappedActions<

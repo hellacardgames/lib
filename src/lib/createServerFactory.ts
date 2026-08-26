@@ -11,6 +11,8 @@ type Manager<
   TLeaveGameError extends string,
   TSendChatError extends string,
   TStartGameError extends string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TGameplayActions extends Record<string, (...args: any[]) => any>,
 > = {
   readonly createGame: (
     userId: string,
@@ -75,13 +77,10 @@ type Manager<
   ) =>
     | { readonly success: true }
     | { readonly success: false; readonly error: TStartGameError };
-};
 
-type CustomActions = {
-  path: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  action: (...args: any[]) => object;
-}[];
+  readonly gameplayActions: TGameplayActions &
+    ConstrainGameActions<TGameplayActions>;
+};
 
 export function createServerFactory<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,8 +95,9 @@ export function createServerFactory<
   TLeaveGameError extends string,
   TSendChatError extends string,
   TStartGameError extends string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TGameplayActions extends Record<string, (...args: any[]) => any>,
   TManager extends object,
-  const TCustomActions extends CustomActions,
 >(
   createManager: (
     ...args: TArgs
@@ -111,10 +111,13 @@ export function createServerFactory<
     TJoinGameError,
     TLeaveGameError,
     TSendChatError,
-    TStartGameError
+    TStartGameError,
+    TGameplayActions
   > &
     TManager,
-  createCustomActions: (manager: TManager) => TCustomActions,
+  zodSchemas: {
+    [K in keyof TGameplayActions]: z.ZodType<Parameters<TGameplayActions[K]>>;
+  },
 ) {
   return (...args: TArgs) => {
     const manager = createManager(...args);
@@ -226,7 +229,7 @@ export function createServerFactory<
     }
 
     return {
-      actions: [
+      routes: [
         { path: "/createGame", action: createGame },
         {
           path: "/getClientStateAndClearEvents",
@@ -241,8 +244,93 @@ export function createServerFactory<
         { path: "/leaveGame", action: leaveGame },
         { path: "/sendChat", action: sendChat },
         { path: "/startGame", action: startGame },
-        ...createCustomActions(manager),
+        ...toRoutes(wrapActions(manager.gameplayActions, zodSchemas)),
       ],
     } as const;
   };
 }
+
+function wrapActions<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TActions extends Record<string, (...args: any[]) => any>,
+>(
+  actions: TActions & ConstrainGameActions<TActions>,
+  zodSchemas: {
+    [K in keyof TActions]: z.ZodType<Parameters<TActions[K]>>;
+  },
+): Readonly<WrappedActions<TActions>> {
+  const wrapped = {} as WrappedActions<TActions>;
+  for (const key of Object.keys(actions) as Array<keyof TActions>) {
+    wrapped[key] = wrapAction(
+      actions[key] as never,
+      zodSchemas[key],
+    ) as WrappedActions<TActions>[typeof key];
+  }
+  return wrapped;
+}
+
+function wrapAction<TArgs extends unknown[], TError extends string>(
+  action: (
+    ...args: TArgs
+  ) => { success: true } | { success: false; error: TError },
+  zodSchema: z.ZodType<TArgs>,
+) {
+  return (input: unknown) => {
+    const parseResult = zodSchema.safeParse(input);
+    if (!parseResult.success) {
+      return { success: false, error: "invalidInput" } as const;
+    }
+    return action(...parseResult.data);
+  };
+}
+
+type ConstrainGameActions<TActions> = {
+  [K in keyof TActions]: TActions[K] extends (
+    ...args: never[]
+  ) => GameActionResult
+    ? TActions[K]
+    : never;
+};
+
+type GameActionResult =
+  | { readonly success: true }
+  | { readonly success: false; readonly error: string };
+
+type WrappedActions<TActions> = {
+  [K in keyof TActions]: WrappedAction<TActions[K]>;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type WrappedAction<TAction> = TAction extends (...args: any[]) => infer TResult
+  ? (input: unknown) =>
+      | { readonly success: true }
+      | {
+          readonly success: false;
+          readonly error: "invalidInput" | ActionError<TResult>;
+        }
+  : never;
+
+type ActionError<TResult> = TResult extends {
+  success: false;
+  error: infer TError extends string;
+}
+  ? TError
+  : never;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toRoutes<const T extends Record<string, (...args: any[]) => unknown>>(
+  actions: T,
+): Routes<T> {
+  return Object.entries(actions).map(([key, action]) => ({
+    path: `/${key}`,
+    action,
+  })) as Routes<T>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Routes<T extends Record<string, (...args: any[]) => unknown>> = {
+  [K in keyof T]: {
+    readonly path: `/${K & string}`;
+    readonly action: T[K];
+  };
+}[keyof T][];
