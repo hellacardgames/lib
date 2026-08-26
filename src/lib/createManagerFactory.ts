@@ -8,7 +8,7 @@ type Params<
   TLeaveGameError extends string,
   TSendChatError extends string,
   TStartGameError extends string,
-  TCustomActions extends CustomActions,
+  TGameplayActions extends Record<string, unknown>,
 > = {
   readonly maxPlayers: number;
   readonly createGame: (
@@ -58,9 +58,8 @@ type Params<
   ) =>
     { success: true; game: TGame } | { success: false; error: TStartGameError };
 
-  readonly addCustomActions: (
-    wrapAction: ReturnType<typeof wrapActionFactory<TGame>>,
-  ) => Readonly<TCustomActions>;
+  readonly gameplayActions: TGameplayActions &
+    ConstrainGameActions<TGame, TGameplayActions>;
 };
 
 type Game = {
@@ -69,9 +68,6 @@ type Game = {
   expiresAt: number;
   players: readonly object[];
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CustomActions = Record<string, (...args: any[]) => object>;
 
 export function createManagerFactory<
   TGame extends Game,
@@ -83,7 +79,7 @@ export function createManagerFactory<
   TLeaveGameError extends string,
   TSendChatError extends string,
   TStartGameError extends string,
-  TCustomActions extends CustomActions,
+  TGameplayActions extends Record<string, unknown>,
 >(
   params: Params<
     TGame,
@@ -95,7 +91,7 @@ export function createManagerFactory<
     TLeaveGameError,
     TSendChatError,
     TStartGameError,
-    TCustomActions
+    TGameplayActions
   >,
 ) {
   return (logKey: string, maxGames: number, watchdogIntervalMs: number) => {
@@ -200,34 +196,6 @@ export function createManagerFactory<
       return { success: true } as const;
     }
 
-    function sendChat(gameId: string, playerId: string, text: string) {
-      const game = games.get(gameId);
-      if (!game) {
-        return { success: false, error: "gameNotFound" } as const;
-      }
-      const result = params.sendChat(game, playerId, text);
-      if (!result.success) {
-        return { success: false as const, error: result.error } as const;
-      }
-      games.set(gameId, result.game);
-      return { success: true } as const;
-    }
-
-    function startGame(gameId: string, playerId: string) {
-      const game = games.get(gameId);
-      if (!game) {
-        return { success: false, error: "gameNotFound" } as const;
-      }
-      const result = params.startGame(game, playerId);
-      if (!result.success) {
-        return { success: false as const, error: result.error } as const;
-      }
-      games.set(gameId, result.game);
-      return { success: true } as const;
-    }
-
-    const wrapAction = wrapActionFactory<TGame>(games);
-
     return {
       createGame,
       getClientStateAndClearEvents,
@@ -235,9 +203,9 @@ export function createManagerFactory<
       getJoinableGames,
       joinGame,
       leaveGame,
-      sendChat,
-      startGame,
-      ...params.addCustomActions(wrapAction),
+      sendChat: wrapAction(params.sendChat, games),
+      startGame: wrapAction(params.startGame, games),
+      ...wrapActions(params.gameplayActions, games),
     } as const;
   };
 }
@@ -270,29 +238,76 @@ class Watchdog<TGame extends Game> {
   }
 }
 
-function wrapActionFactory<TGame>(games: Map<string, TGame>) {
-  function wrapAction<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TArgs extends any[],
-    TError extends string,
-  >(
-    action: (
-      game: TGame,
-      ...args: TArgs
-    ) => { success: true; game: TGame } | { success: false; error: TError },
-  ) {
-    return (gameId: string, ...args: TArgs) => {
-      const game = games.get(gameId);
-      if (!game) {
-        return { success: false, error: "gameNotFound" } as const;
-      }
-      const result = action(game, ...args);
-      if (!result.success) {
-        return { success: false, error: result.error } as const;
-      }
-      games.set(gameId, result.game);
-      return { success: true } as const;
-    };
+function wrapActions<TGame, TActions extends Record<string, unknown>>(
+  actions: TActions & ConstrainGameActions<TGame, TActions>,
+  games: Map<string, TGame>,
+): WrappedActions<TGame, TActions> {
+  const wrapped = {} as WrappedActions<TGame, TActions>;
+  for (const key of Object.keys(actions) as Array<keyof TActions>) {
+    wrapped[key] = wrapAction(actions[key] as never, games) as WrappedActions<
+      TGame,
+      TActions
+    >[typeof key];
   }
-  return wrapAction;
+  return wrapped;
 }
+
+function wrapAction<TGame, TArgs extends unknown[], TError extends string>(
+  action: (
+    game: TGame,
+    ...args: TArgs
+  ) => { success: true; game: TGame } | { success: false; error: TError },
+  games: Map<string, TGame>,
+) {
+  return (gameId: string, ...args: TArgs) => {
+    const game = games.get(gameId);
+    if (!game) {
+      return { success: false, error: "gameNotFound" } as const;
+    }
+    const result = action(game, ...args);
+    if (!result.success) {
+      return { success: false, error: result.error } as const;
+    }
+    games.set(gameId, result.game);
+    return { success: true } as const;
+  };
+}
+
+type ConstrainGameActions<TGame, TActions> = {
+  [K in keyof TActions]: TActions[K] extends (
+    game: TGame,
+    ...args: never[]
+  ) => GameActionResult<TGame>
+    ? TActions[K]
+    : never;
+};
+
+type GameActionResult<TGame> =
+  | { readonly success: true; readonly game: TGame }
+  | { readonly success: false; readonly error: string };
+
+type WrappedActions<TGame, TActions> = {
+  [K in keyof TActions]: WrappedAction<TGame, TActions[K]>;
+};
+
+type WrappedAction<TGame, TAction> = TAction extends (
+  game: TGame,
+  ...args: infer TArgs
+) => infer TResult
+  ? (
+      gameId: string,
+      ...args: TArgs
+    ) =>
+      | { readonly success: true }
+      | {
+          readonly success: false;
+          readonly error: "gameNotFound" | ActionError<TResult>;
+        }
+  : never;
+
+type ActionError<TResult> = TResult extends {
+  success: false;
+  error: infer TError extends string;
+}
+  ? TError
+  : never;
