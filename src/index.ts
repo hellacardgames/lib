@@ -4,6 +4,7 @@ export { sendChat } from "./actions/sendChat.js";
 export { addItemToCollection } from "./lib/addItemToCollection.js";
 export { calculateNextPlayerIndex } from "./lib/calculateNextPlayerIndex.js";
 export { changeTurn } from "./lib/changeTurn.js";
+export { createClientFactory } from "./lib/createClientFactory.js";
 export { createManagerFactory } from "./lib/createManagerFactory.js";
 export { createServerFactory } from "./lib/createServerFactory.js";
 export { emitEvent } from "./lib/emitEvent.js";
