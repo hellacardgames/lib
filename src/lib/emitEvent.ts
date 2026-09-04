@@ -1,18 +1,17 @@
-type Game<TEvent extends GameEvent> = {
+type Game = {
   readonly players: readonly {
-    readonly events: readonly TEvent[];
+    readonly events: readonly {
+      readonly id: string;
+      readonly type: string;
+    }[];
   }[];
-};
-
-type GameEvent = {
-  readonly id: string;
 };
 
 type OmitId<T> = T extends unknown ? Omit<T, "id"> : never;
 
-export function emitEvent<TEvent extends GameEvent, TGame extends Game<TEvent>>(
+export function emitEvent<TGame extends Game>(
   game: TGame,
-  data: OmitId<TEvent>,
+  data: OmitId<TGame["players"][number]["events"][number]>,
 ): TGame {
   const event = { ...data, id: crypto.randomUUID() };
 
