@@ -18,6 +18,8 @@ export { removeItemFromCollection } from "./lib/removeItemFromCollection.js";
 export { removePlayer } from "./lib/removePlayer.js";
 export { requireOtherPlayer } from "./lib/requireOtherPlayer.js";
 export { requirePlayer } from "./lib/requirePlayer.js";
+export { requirePlayerOne } from "./lib/requirePlayerOne.js";
+export { requirePlayerTwo } from "./lib/requirePlayerTwo.js";
 export { shuffle } from "./lib/shuffle.js";
 export { takeLastItemFromCollection } from "./lib/takeLastItemFromCollection.js";
 export { updatePlayer } from "./lib/updatePlayer.js";
