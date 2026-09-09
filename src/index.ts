@@ -13,6 +13,7 @@ export { getClientStateAndClearEventsFactory } from "./lib/getClientStateAndClea
 export { getCurrentPlayer } from "./lib/getCurrentPlayer.js";
 export { getNextPlayer } from "./lib/getNextPlayer.js";
 export { isCurrentPlayer } from "./lib/isCurrentPlayer.js";
+export { peekLastItemInCollection } from "./lib/peekLastItemInCollection.js";
 export { prependItemToCollection } from "./lib/prependItemToCollection.js";
 export { removeItemFromCollection } from "./lib/removeItemFromCollection.js";
 export { removePlayer } from "./lib/removePlayer.js";
