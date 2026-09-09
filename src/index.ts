@@ -16,6 +16,7 @@ export { isCurrentPlayer } from "./lib/isCurrentPlayer.js";
 export { prependItemToCollection } from "./lib/prependItemToCollection.js";
 export { removeItemFromCollection } from "./lib/removeItemFromCollection.js";
 export { removePlayer } from "./lib/removePlayer.js";
+export { requireOtherPlayer } from "./lib/requireOtherPlayer.js";
 export { requirePlayer } from "./lib/requirePlayer.js";
 export { shuffle } from "./lib/shuffle.js";
 export { takeLastItemFromCollection } from "./lib/takeLastItemFromCollection.js";
