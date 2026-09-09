@@ -17,6 +17,7 @@ export { isCollectionEmpty } from "./lib/isCollectionEmpty.js";
 export { isCollectionLengthEven } from "./lib/isCollectionLengthEven.js";
 export { isCollectionLengthOdd } from "./lib/isCollectionLengthOdd.js";
 export { isCurrentPlayer } from "./lib/isCurrentPlayer.js";
+export { isPlayerAdmin } from "./lib/isPlayerAdmin.js";
 export { peekLastItemInCollection } from "./lib/peekLastItemInCollection.js";
 export { prependItemToCollection } from "./lib/prependItemToCollection.js";
 export { removeItemFromCollection } from "./lib/removeItemFromCollection.js";
