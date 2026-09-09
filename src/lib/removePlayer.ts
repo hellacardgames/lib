@@ -1,38 +1,26 @@
-import { changeTurn } from "./changeTurn.js";
-import { removeItemFromCollection } from "./removeItemFromCollection.js";
-import { requirePlayer } from "./requirePlayer.js";
+import { removePlayerFromNonTurnBasedGame } from "../helpers/removePlayerFromNonTurnBasedGame.js";
+import { removePlayerFromTurnBasedGame } from "../helpers/removePlayerFromTurnBasedGame.js";
+import type { NonTurnBasedGame } from "../helpers/removePlayerFromNonTurnBasedGame.js";
+import type {
+  RemovePlayerFromTurnBasedGameResult,
+  TurnBasedGame,
+} from "../helpers/removePlayerFromTurnBasedGame.js";
 
-type RemovePlayerResult<TGame extends Game> = {
-  readonly turnChanged: boolean;
-  readonly game: TGame;
-};
+type Game = TurnBasedGame | NonTurnBasedGame;
 
-type Game = {
-  readonly players: readonly {
-    readonly id: string;
-  }[];
-  readonly currentPlayerIndex: number;
-  readonly isReversed?: boolean;
-};
-
-export function removePlayer<TGame extends Game>(
+export function removePlayer<TGame extends TurnBasedGame>(
   game: TGame,
   playerId: string,
-): RemovePlayerResult<TGame> {
-  const { player, index } = requirePlayer(game, playerId);
+): RemovePlayerFromTurnBasedGameResult<TGame>;
 
-  let turnChanged = false;
+export function removePlayer<TGame extends NonTurnBasedGame>(
+  game: TGame,
+  playerId: string,
+): TGame;
 
-  if (index === game.currentPlayerIndex && game.players.length > 1) {
-    game = changeTurn(game);
-    turnChanged = true;
+export function removePlayer(game: Game, playerId: string) {
+  if ("currentPlayerIndex" in game) {
+    return removePlayerFromTurnBasedGame(game, playerId);
   }
-
-  game = { ...game, players: removeItemFromCollection(game.players, player) };
-
-  if (game.currentPlayerIndex > index) {
-    game = { ...game, currentPlayerIndex: game.currentPlayerIndex - 1 };
-  }
-
-  return { turnChanged, game };
+  return removePlayerFromNonTurnBasedGame(game, playerId);
 }
