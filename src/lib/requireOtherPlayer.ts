@@ -1,7 +1,7 @@
 import { requirePlayer } from "./requirePlayer.js";
 
 type RequireOtherPlayerResult<TGame extends Game> = {
-  readonly player: Player<TGame>;
+  readonly otherPlayer: Player<TGame>;
   readonly index: number;
 };
 
@@ -25,7 +25,7 @@ export function requireOtherPlayer<TGame extends Game>(
   }
 
   return {
-    player: game.players[index]!,
+    otherPlayer: game.players[index]!,
     index,
   };
 }

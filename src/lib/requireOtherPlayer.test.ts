@@ -6,9 +6,9 @@ test("returns other player", () => {
     players: [{ id: "player-id-001" }, { id: "player-id-002" }],
   };
 
-  const { player } = requireOtherPlayer(game, "player-id-002");
+  const { otherPlayer } = requireOtherPlayer(game, "player-id-002");
 
-  expect(player.id).toBe("player-id-001");
+  expect(otherPlayer.id).toBe("player-id-001");
 });
 
 test("throws when there is no other player", () => {
