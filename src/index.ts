@@ -30,6 +30,7 @@ export { requirePlayerOne } from "./lib/requirePlayerOne.js";
 export { requirePlayerTwo } from "./lib/requirePlayerTwo.js";
 export { shuffle } from "./lib/shuffle.js";
 export { takeLastItemFromCollection } from "./lib/takeLastItemFromCollection.js";
+export { takeLastItemsFromCollection } from "./lib/takeLastItemsFromCollection.js";
 export { tryPeekItemInCollection } from "./lib/tryPeekItemInCollection.js";
 export { updatePlayer } from "./lib/updatePlayer.js";
 
