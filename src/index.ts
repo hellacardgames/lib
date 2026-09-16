@@ -34,4 +34,7 @@ export { takeLastItemsFromCollection } from "./lib/takeLastItemsFromCollection.j
 export { tryPeekItemInCollection } from "./lib/tryPeekItemInCollection.js";
 export { updatePlayer } from "./lib/updatePlayer.js";
 
+export { CARDS } from "./constants.js";
+
+export type { Card } from "./types/Card.js";
 export type { ChatMessage } from "./types/ChatMessage.js";
