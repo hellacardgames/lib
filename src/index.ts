@@ -14,6 +14,7 @@ export { getClientStateAndClearEventsFactory } from "./lib/getClientStateAndClea
 export { getCurrentPlayer } from "./lib/getCurrentPlayer.js";
 export { getLastIndexInCollection } from "./lib/getLastIndexInCollection.js";
 export { getNextPlayer } from "./lib/getNextPlayer.js";
+export { getOtherPlayer } from "./lib/getOtherPlayer.js";
 export { getRankValue } from "./lib/getRankValue.js";
 export { isCollectionEmpty } from "./lib/isCollectionEmpty.js";
 export { isCollectionLengthEven } from "./lib/isCollectionLengthEven.js";
