@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
-import { requirePlayerOne } from "./requirePlayerOne.js";
+import { getPlayerOne } from "./getPlayerOne.js";
 
 test("returns player one", () => {
   const game = {
     players: [{ id: "player-id-001" }, { id: "player-id-002" }],
   };
 
-  const playerOne = requirePlayerOne(game);
+  const playerOne = getPlayerOne(game);
 
   expect(playerOne.id).toBe("player-id-001");
 });
@@ -16,5 +16,5 @@ test("throws when player one not found", () => {
     players: [],
   };
 
-  expect(() => requirePlayerOne(game)).toThrow("Player one not found.");
+  expect(() => getPlayerOne(game)).toThrow("Player one not found.");
 });

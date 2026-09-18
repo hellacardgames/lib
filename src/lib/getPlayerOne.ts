@@ -1,3 +1,5 @@
+import { tryGetPlayerOne } from "./tryGetPlayerOne.js";
+
 type Player<TGame extends Game> = TGame["players"][number];
 
 type Game = {
@@ -6,10 +8,8 @@ type Game = {
   }[];
 };
 
-export function requirePlayerOne<TGame extends Game>(
-  game: TGame,
-): Player<TGame> {
-  const playerOne = game.players[0];
+export function getPlayerOne<TGame extends Game>(game: TGame): Player<TGame> {
+  const playerOne = tryGetPlayerOne(game);
 
   if (!playerOne) {
     throw new Error("Player one not found.");

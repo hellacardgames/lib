@@ -1,5 +1,5 @@
 import { removeItemFromCollection } from "../lib/removeItemFromCollection.js";
-import { requirePlayer } from "../lib/requirePlayer.js";
+import { getPlayer } from "../lib/getPlayer.js";
 
 export type NonTurnBasedGame = {
   readonly players: readonly {
@@ -10,7 +10,7 @@ export type NonTurnBasedGame = {
 export function removePlayerFromNonTurnBasedGame<
   TGame extends NonTurnBasedGame,
 >(game: TGame, playerId: string): TGame {
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
 
   game = { ...game, players: removeItemFromCollection(game.players, player) };
 

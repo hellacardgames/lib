@@ -1,4 +1,4 @@
-import { requirePlayer } from "../lib/requirePlayer.js";
+import { getPlayer } from "../lib/getPlayer.js";
 import { updatePlayer } from "../lib/updatePlayer.js";
 
 type DoGetEventsAndClearAcknowledgedResult<TGame extends Game> = {
@@ -22,7 +22,7 @@ export function doGetEventsAndClearAcknowledged<TGame extends Game>(
   playerId: string,
   lastReadId: string | null,
 ): DoGetEventsAndClearAcknowledgedResult<TGame> {
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
 
   const lastReadEventIndex = player.events.findIndex(
     (e) => e.id === lastReadId,

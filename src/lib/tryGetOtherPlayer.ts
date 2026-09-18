@@ -1,4 +1,4 @@
-import { requirePlayer } from "./requirePlayer.js";
+import { getPlayer } from "./getPlayer.js";
 
 type TryGetOtherPlayerResult<TGame extends Game> = {
   readonly otherPlayer: Player<TGame> | undefined;
@@ -21,7 +21,7 @@ export function tryGetOtherPlayer<TGame extends Game>(
     throw new Error("Game has more than two players.");
   }
 
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
   const index = game.players.findIndex((p) => p.id !== player.id);
 
   return {

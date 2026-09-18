@@ -1,4 +1,4 @@
-import { requirePlayer } from "./requirePlayer.js";
+import { getPlayer } from "./getPlayer.js";
 
 type Game = {
   readonly players: readonly {
@@ -11,7 +11,7 @@ export function updatePlayer<TGame extends Game>(
   playerId: string,
   update: (player: TGame["players"][number]) => TGame["players"][number],
 ): TGame {
-  const { index } = requirePlayer(game, playerId);
+  const { index } = getPlayer(game, playerId);
 
   return {
     ...game,

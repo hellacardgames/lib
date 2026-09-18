@@ -1,4 +1,4 @@
-import { requirePlayer } from "./requirePlayer.js";
+import { getPlayer } from "./getPlayer.js";
 
 type Game = {
   readonly players: readonly {
@@ -17,7 +17,7 @@ export function emitEventToOtherPlayers<TGame extends Game>(
   playerId: string,
   data: OmitId<TGame["players"][number]["events"][number]>,
 ): TGame {
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
   const event = { ...data, id: crypto.randomUUID() };
 
   return {

@@ -1,6 +1,6 @@
 import { changeTurn } from "../lib/changeTurn.js";
 import { removeItemFromCollection } from "../lib/removeItemFromCollection.js";
-import { requirePlayer } from "../lib/requirePlayer.js";
+import { getPlayer } from "../lib/getPlayer.js";
 
 export type TurnBasedGame = {
   readonly players: readonly {
@@ -19,7 +19,7 @@ export function removePlayerFromTurnBasedGame<TGame extends TurnBasedGame>(
   game: TGame,
   playerId: string,
 ): RemovePlayerFromTurnBasedGameResult<TGame> {
-  const { player, index } = requirePlayer(game, playerId);
+  const { player, index } = getPlayer(game, playerId);
 
   let turnChanged = false;
 

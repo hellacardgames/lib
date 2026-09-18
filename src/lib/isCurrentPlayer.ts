@@ -1,5 +1,5 @@
 import { getCurrentPlayer } from "./getCurrentPlayer.js";
-import { requirePlayer } from "./requirePlayer.js";
+import { getPlayer } from "./getPlayer.js";
 
 type Game = {
   readonly players: readonly {
@@ -12,6 +12,6 @@ export function isCurrentPlayer<TGame extends Game>(
   game: TGame,
   playerId: string,
 ): boolean {
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
   return getCurrentPlayer(game).id === player.id;
 }
