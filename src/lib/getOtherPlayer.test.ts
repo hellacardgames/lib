@@ -6,21 +6,19 @@ test("returns other player", () => {
     players: [{ id: "player-id-001" }, { id: "player-id-002" }],
   };
 
-  const otherPlayer = getOtherPlayer(game, "player-id-002");
-  if (!otherPlayer) {
-    throw new Error("Expected otherPlayer to exist.");
-  }
+  const { otherPlayer } = getOtherPlayer(game, "player-id-002");
 
   expect(otherPlayer.id).toBe("player-id-001");
 });
 
-test("returns undefined when there is only one player", () => {
+test("throws when there is no other player", () => {
   const game = {
     players: [{ id: "player-id-001" }],
   };
 
-  const otherPlayer = getOtherPlayer(game, "player-id-001");
-  expect(otherPlayer).toBeUndefined();
+  expect(() => getOtherPlayer(game, "player-id-001")).toThrow(
+    "Other player not found.",
+  );
 });
 
 test("throws when given playerId not found", () => {

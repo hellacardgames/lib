@@ -1,4 +1,9 @@
-import { requirePlayer } from "./requirePlayer.js";
+import { tryGetOtherPlayer } from "./tryGetOtherPlayer.js";
+
+type GetOtherPlayerResult<TGame extends Game> = {
+  readonly otherPlayer: Player<TGame>;
+  readonly index: number;
+};
 
 type Player<TGame extends Game> = TGame["players"][number];
 
@@ -11,9 +16,15 @@ type Game = {
 export function getOtherPlayer<TGame extends Game>(
   game: TGame,
   playerId: string,
-): Player<TGame> | undefined {
-  const { player } = requirePlayer(game, playerId);
-  const otherPlayer = game.players.find((p) => p.id !== player.id);
+): GetOtherPlayerResult<TGame> {
+  const { otherPlayer, index } = tryGetOtherPlayer(game, playerId);
 
-  return otherPlayer;
+  if (!otherPlayer) {
+    throw new Error(`Other player not found.`);
+  }
+
+  return {
+    otherPlayer,
+    index,
+  };
 }

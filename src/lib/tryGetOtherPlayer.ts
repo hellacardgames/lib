@@ -1,7 +1,7 @@
 import { requirePlayer } from "./requirePlayer.js";
 
-type RequireOtherPlayerResult<TGame extends Game> = {
-  readonly otherPlayer: Player<TGame>;
+type TryGetOtherPlayerResult<TGame extends Game> = {
+  readonly otherPlayer: Player<TGame> | undefined;
   readonly index: number;
 };
 
@@ -13,19 +13,19 @@ type Game = {
   }[];
 };
 
-export function requireOtherPlayer<TGame extends Game>(
+export function tryGetOtherPlayer<TGame extends Game>(
   game: TGame,
   playerId: string,
-): RequireOtherPlayerResult<TGame> {
+): TryGetOtherPlayerResult<TGame> {
+  if (game.players.length > 2) {
+    throw new Error("Game has more than two players.");
+  }
+
   const { player } = requirePlayer(game, playerId);
   const index = game.players.findIndex((p) => p.id !== player.id);
 
-  if (index === -1) {
-    throw new Error(`Other player not found.`);
-  }
-
   return {
-    otherPlayer: game.players[index]!,
+    otherPlayer: game.players[index],
     index,
   };
 }
