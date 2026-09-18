@@ -1,3 +1,4 @@
+import { tryGetPlayer } from "./tryGetPlayer.js";
 import { updatePlayer } from "./updatePlayer.js";
 
 type Game = {
@@ -11,7 +12,7 @@ export function getClientStateAndClearEventsFactory<
   TClientState extends object,
 >(transform: (game: TGame, player: TGame["players"][number]) => TClientState) {
   return (game: TGame, playerId: string) => {
-    const player = game.players.find((p) => p.id === playerId);
+    const { player } = tryGetPlayer(game, playerId);
     if (!player) {
       return { success: false, error: "playerNotFound" } as const;
     }

@@ -1,5 +1,6 @@
 import { addItemToCollection } from "../lib/addItemToCollection.js";
 import { emitEvent } from "../lib/emitEvent.js";
+import { tryGetPlayer } from "../lib/tryGetPlayer.js";
 import type { ChatMessage } from "../types/ChatMessage.js";
 
 export function sendChat<TGame extends Game>(
@@ -7,7 +8,7 @@ export function sendChat<TGame extends Game>(
   playerId: string,
   text: string,
 ) {
-  const player = game.players.find((p) => p.id === playerId);
+  const { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }

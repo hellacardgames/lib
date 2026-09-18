@@ -1,4 +1,5 @@
 import { doGetEventsAndClearAcknowledged } from "../helpers/doGetEventsAndClearAcknowledged.js";
+import { tryGetPlayer } from "../lib/tryGetPlayer.js";
 
 type Game = {
   readonly players: readonly {
@@ -14,7 +15,7 @@ export function getEventsAndClearAcknowledged<TGame extends Game>(
   playerId: string,
   lastReadId: string | null,
 ) {
-  const player = game.players.find((p) => p.id === playerId);
+  const { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
