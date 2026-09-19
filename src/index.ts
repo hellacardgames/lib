@@ -2,7 +2,6 @@ export { getEventsAndClearAcknowledged } from "./actions/getEventsAndClearAcknow
 export { sendChat } from "./actions/sendChat.js";
 
 export { addItemToCollection } from "./lib/addItemToCollection.js";
-export { allPlayersHaveStatus } from "./lib/allPlayersHaveStatus.js";
 export { calculateNextPlayerIndex } from "./lib/calculateNextPlayerIndex.js";
 export { changeTurn } from "./lib/changeTurn.js";
 export { createClientFactory } from "./lib/createClientFactory.js";
