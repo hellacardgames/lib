@@ -1,9 +1,9 @@
 import type { Card } from "../types/Card.js";
 
-export function getRankValue(rank: Card["rank"]): number {
+export function getAceLowRankValue(rank: Card["rank"]): number {
   switch (rank) {
     case "A":
-      return 14;
+      return 1;
     case "K":
       return 13;
     case "Q":
