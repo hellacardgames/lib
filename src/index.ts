@@ -40,6 +40,7 @@ export { tryGetPlayerOne } from "./lib/tryGetPlayerOne.js";
 export { tryGetPlayerTwo } from "./lib/tryGetPlayerTwo.js";
 export { tryPeekItemInCollection } from "./lib/tryPeekItemInCollection.js";
 export { updatePlayer } from "./lib/updatePlayer.js";
+export { updatePlayers } from "./lib/updatePlayers.js";
 
 export { CARDS } from "./constants.js";
 
