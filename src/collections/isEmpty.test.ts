@@ -1,10 +1,10 @@
 import { expect, test } from "vitest";
-import { isCollectionEmpty } from "./isCollectionEmpty.js";
+import { isEmpty } from "./isEmpty.js";
 
 test("returns true if collection is empty", () => {
-  expect(isCollectionEmpty([])).toBe(true);
+  expect(isEmpty([])).toBe(true);
 });
 
 test("returns false if collection is not empty", () => {
-  expect(isCollectionEmpty([1])).toBe(false);
+  expect(isEmpty([1])).toBe(false);
 });

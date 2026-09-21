@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { tryPeekItemInCollection } from "./tryPeekItemInCollection.js";
+import { tryPeekItem } from "./tryPeekItem.js";
 
 test("returns item in collection", () => {
   const item1 = "item1";
@@ -8,7 +8,7 @@ test("returns item in collection", () => {
 
   const collection: readonly string[] = [item1, item2, item3];
 
-  const item = tryPeekItemInCollection(collection, 2);
+  const item = tryPeekItem(collection, 2);
 
   expect(item).toBe(item3);
 });
@@ -20,6 +20,6 @@ test("returns undefined if index is out of range", () => {
 
   const collection: readonly string[] = [item1, item2, item3];
 
-  expect(tryPeekItemInCollection(collection, -1)).toBeUndefined();
-  expect(tryPeekItemInCollection(collection, 3)).toBeUndefined();
+  expect(tryPeekItem(collection, -1)).toBeUndefined();
+  expect(tryPeekItem(collection, 3)).toBeUndefined();
 });

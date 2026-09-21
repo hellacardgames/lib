@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { takeLastItemFromCollection } from "./takeLastItemFromCollection.js";
+import { takeLastItem } from "./takeLastItem.js";
 
 test("takes last item from collection", () => {
   const item1 = "item1";
@@ -8,7 +8,7 @@ test("takes last item from collection", () => {
 
   const collection: readonly string[] = [item1, item2, item3];
 
-  const result = takeLastItemFromCollection(collection);
+  const result = takeLastItem(collection);
 
   expect(result.collection).toEqual([item1, item2]);
   expect(result.item).toBe(item3);
@@ -17,7 +17,5 @@ test("takes last item from collection", () => {
 test("throws if collection is empty", () => {
   const collection: unknown[] = [];
 
-  expect(() => takeLastItemFromCollection(collection)).toThrow(
-    "Collection is empty.",
-  );
+  expect(() => takeLastItem(collection)).toThrow("Collection is empty.");
 });

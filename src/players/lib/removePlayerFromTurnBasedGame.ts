@@ -1,5 +1,5 @@
 import { changeTurn } from "../changeTurn.js";
-import { removeItemFromCollection } from "../../collections/removeItemFromCollection.js";
+import { removeItem } from "../../collections/removeItem.js";
 import { getPlayer } from "../getPlayer.js";
 
 export type TurnBasedGame = {
@@ -28,7 +28,7 @@ export function removePlayerFromTurnBasedGame<TGame extends TurnBasedGame>(
     turnChanged = true;
   }
 
-  game = { ...game, players: removeItemFromCollection(game.players, player) };
+  game = { ...game, players: removeItem(game.players, player) };
 
   if (game.currentPlayerIndex > index) {
     game = { ...game, currentPlayerIndex: game.currentPlayerIndex - 1 };

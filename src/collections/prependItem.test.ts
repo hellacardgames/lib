@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { prependItemToCollection } from "./prependItemToCollection.js";
+import { prependItem } from "./prependItem.js";
 
 test("prepends item to collection", () => {
   const item1 = "item1";
@@ -8,7 +8,7 @@ test("prepends item to collection", () => {
 
   let collection: readonly string[] = [item1, item2];
 
-  collection = prependItemToCollection(collection, item3);
+  collection = prependItem(collection, item3);
 
   expect(collection).toEqual([item3, item1, item2]);
 });

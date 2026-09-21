@@ -1,12 +1,12 @@
-type TakeLastItemsFromCollectionResult<T> = {
+type TakeLastItemsResult<T> = {
   readonly collection: readonly T[];
   readonly items: T[];
 };
 
-export function takeLastItemsFromCollection<T>(
+export function takeLastItems<T>(
   collection: readonly T[],
   count: number,
-): TakeLastItemsFromCollectionResult<T> {
+): TakeLastItemsResult<T> {
   if (count < 1) {
     throw new Error("Count must be a positive number.");
   }

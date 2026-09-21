@@ -1,4 +1,4 @@
-export function tryPeekItemInCollection<T>(
+export function tryPeekItem<T>(
   collection: readonly T[],
   index: number,
 ): T | undefined {

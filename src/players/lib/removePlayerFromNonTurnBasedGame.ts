@@ -1,4 +1,4 @@
-import { removeItemFromCollection } from "../../collections/removeItemFromCollection.js";
+import { removeItem } from "../../collections/removeItem.js";
 import { getPlayer } from "../getPlayer.js";
 
 export type NonTurnBasedGame = {
@@ -12,7 +12,7 @@ export function removePlayerFromNonTurnBasedGame<
 >(game: TGame, playerId: string): TGame {
   const { player } = getPlayer(game, playerId);
 
-  game = { ...game, players: removeItemFromCollection(game.players, player) };
+  game = { ...game, players: removeItem(game.players, player) };
 
   return game;
 }

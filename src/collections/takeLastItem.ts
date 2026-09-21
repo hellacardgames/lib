@@ -1,11 +1,11 @@
-type TakeLastItemFromCollectionResult<T> = {
+type TakeLastItemResult<T> = {
   readonly collection: readonly T[];
   readonly item: T;
 };
 
-export function takeLastItemFromCollection<T>(
+export function takeLastItem<T>(
   collection: readonly T[],
-): TakeLastItemFromCollectionResult<T> {
+): TakeLastItemResult<T> {
   if (collection.length === 0) {
     throw new Error("Collection is empty.");
   }

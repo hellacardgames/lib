@@ -1,4 +1,4 @@
-export function peekLastItemInCollection<T>(collection: readonly T[]): T {
+export function peekLastItem<T>(collection: readonly T[]): T {
   if (collection.length === 0) {
     throw new Error("Collection is empty.");
   }

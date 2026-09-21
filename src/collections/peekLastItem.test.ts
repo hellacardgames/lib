@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { peekLastItemInCollection } from "./peekLastItemInCollection.js";
+import { peekLastItem } from "./peekLastItem.js";
 
 test("returns last item in collection", () => {
   const item1 = "item1";
@@ -8,7 +8,7 @@ test("returns last item in collection", () => {
 
   const collection: readonly string[] = [item1, item2, item3];
 
-  const item = peekLastItemInCollection(collection);
+  const item = peekLastItem(collection);
 
   expect(item).toBe(item3);
 });
@@ -16,7 +16,5 @@ test("returns last item in collection", () => {
 test("throws if collection is empty", () => {
   const collection: unknown[] = [];
 
-  expect(() => peekLastItemInCollection(collection)).toThrow(
-    "Collection is empty.",
-  );
+  expect(() => peekLastItem(collection)).toThrow("Collection is empty.");
 });

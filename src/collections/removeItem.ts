@@ -1,7 +1,4 @@
-export function removeItemFromCollection<T>(
-  collection: readonly T[],
-  item: T,
-): readonly T[] {
+export function removeItem<T>(collection: readonly T[], item: T): readonly T[] {
   const itemIndex = collection.indexOf(item);
 
   if (itemIndex === -1) {

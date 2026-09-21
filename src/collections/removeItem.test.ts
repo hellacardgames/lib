@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { removeItemFromCollection } from "./removeItemFromCollection.js";
+import { removeItem } from "./removeItem.js";
 
 test("removes item from collection", () => {
   const item1 = "item1";
@@ -8,7 +8,7 @@ test("removes item from collection", () => {
 
   let collection: readonly string[] = [item1, item2, item3];
 
-  collection = removeItemFromCollection(collection, item3);
+  collection = removeItem(collection, item3);
 
   expect(collection).toEqual([item1, item2]);
 });
@@ -20,7 +20,7 @@ test("throws if item does not exist in collection", () => {
 
   const collection: readonly string[] = [item1, item2];
 
-  expect(() => removeItemFromCollection(collection, item3)).toThrow(
+  expect(() => removeItem(collection, item3)).toThrow(
     "Item does not exist in collection.",
   );
 });

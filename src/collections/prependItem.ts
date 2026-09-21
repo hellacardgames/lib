@@ -1,4 +1,4 @@
-export function prependItemToCollection<T>(
+export function prependItem<T>(
   collection: readonly T[],
   item: T,
 ): readonly T[] {
