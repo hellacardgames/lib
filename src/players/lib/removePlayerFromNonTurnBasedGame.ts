@@ -1,5 +1,5 @@
-import { removeItemFromCollection } from "../lib/removeItemFromCollection.js";
-import { getPlayer } from "../lib/getPlayer.js";
+import { removeItemFromCollection } from "../../collections/removeItemFromCollection.js";
+import { getPlayer } from "../getPlayer.js";
 
 export type NonTurnBasedGame = {
   readonly players: readonly {

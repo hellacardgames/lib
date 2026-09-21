@@ -1,5 +1,5 @@
-import { getPlayer } from "../lib/getPlayer.js";
-import { updatePlayer } from "../lib/updatePlayer.js";
+import { getPlayer } from "../../players/getPlayer.js";
+import { updatePlayer } from "../../players/updatePlayer.js";
 
 type DoGetEventsAndClearAcknowledgedResult<TGame extends Game> = {
   readonly events: readonly Event<TGame>[];

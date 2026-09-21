@@ -1,5 +1,5 @@
-import { tryGetPlayer } from "./tryGetPlayer.js";
-import { updatePlayer } from "./updatePlayer.js";
+import { tryGetPlayer } from "../players/tryGetPlayer.js";
+import { updatePlayer } from "../players/updatePlayer.js";
 
 type Game = {
   players: readonly {

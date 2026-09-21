@@ -1,4 +1,4 @@
-import type { Card } from "../types/Card.js";
+import type { Card } from "./types/Card.js";
 
 export function getAceHighRankValue(rank: Card["rank"]): number {
   switch (rank) {

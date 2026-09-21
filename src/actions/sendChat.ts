@@ -1,7 +1,7 @@
-import { addItemToCollection } from "../lib/addItemToCollection.js";
-import { emitEvent } from "../lib/emitEvent.js";
-import { tryGetPlayer } from "../lib/tryGetPlayer.js";
-import type { ChatMessage } from "../types/ChatMessage.js";
+import { addItemToCollection } from "../collections/addItemToCollection.js";
+import { emitEvent } from "../events/emitEvent.js";
+import { tryGetPlayer } from "../players/tryGetPlayer.js";
+import type { ChatMessage } from "./types/ChatMessage.js";
 
 export function sendChat<TGame extends Game>(
   game: HasChatEvent<TGame>,

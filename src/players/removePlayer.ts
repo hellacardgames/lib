@@ -1,10 +1,10 @@
-import { removePlayerFromNonTurnBasedGame } from "../helpers/removePlayerFromNonTurnBasedGame.js";
-import { removePlayerFromTurnBasedGame } from "../helpers/removePlayerFromTurnBasedGame.js";
-import type { NonTurnBasedGame } from "../helpers/removePlayerFromNonTurnBasedGame.js";
+import { removePlayerFromNonTurnBasedGame } from "./lib/removePlayerFromNonTurnBasedGame.js";
+import { removePlayerFromTurnBasedGame } from "./lib/removePlayerFromTurnBasedGame.js";
+import type { NonTurnBasedGame } from "./lib/removePlayerFromNonTurnBasedGame.js";
 import type {
   RemovePlayerFromTurnBasedGameResult,
   TurnBasedGame,
-} from "../helpers/removePlayerFromTurnBasedGame.js";
+} from "./lib/removePlayerFromTurnBasedGame.js";
 
 type Game = TurnBasedGame | NonTurnBasedGame;
 

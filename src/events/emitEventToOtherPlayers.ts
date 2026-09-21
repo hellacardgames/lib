@@ -1,4 +1,4 @@
-import { getPlayer } from "./getPlayer.js";
+import { getPlayer } from "../players/getPlayer.js";
 
 type Game = {
   readonly players: readonly {

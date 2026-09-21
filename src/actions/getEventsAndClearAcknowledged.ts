@@ -1,5 +1,5 @@
-import { doGetEventsAndClearAcknowledged } from "../helpers/doGetEventsAndClearAcknowledged.js";
-import { tryGetPlayer } from "../lib/tryGetPlayer.js";
+import { doGetEventsAndClearAcknowledged } from "./lib/doGetEventsAndClearAcknowledged.js";
+import { tryGetPlayer } from "../players/tryGetPlayer.js";
 
 type Game = {
   readonly players: readonly {
