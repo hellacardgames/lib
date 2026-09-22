@@ -1,4 +1,4 @@
-import { addItem } from "../collections/addItem.js";
+import { appendItem } from "../collections/appendItem.js";
 import { emitEvent } from "../events/emitEvent.js";
 import { tryGetPlayer } from "../players/tryGetPlayer.js";
 import type { ChatMessage } from "./types/ChatMessage.js";
@@ -21,7 +21,7 @@ export function sendChat<TGame extends Game>(
 
   game = {
     ...game,
-    chatMessages: addItem(game.chatMessages, message),
+    chatMessages: appendItem(game.chatMessages, message),
   };
 
   const event: Omit<ChatEvent, "id"> = { type: "chat", message };

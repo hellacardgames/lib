@@ -8,7 +8,7 @@ export { getAceLowRankValue } from "./cards/getAceLowRankValue.js";
 export { CARDS } from "./cards/cards.js";
 export type { Card } from "./cards/types/Card.js";
 
-export { addItem } from "./collections/addItem.js";
+export { appendItem } from "./collections/appendItem.js";
 export { getLastIndex } from "./collections/getLastIndex.js";
 export { isEmpty } from "./collections/isEmpty.js";
 export { isLengthEven } from "./collections/isLengthEven.js";
