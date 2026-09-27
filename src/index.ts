@@ -22,6 +22,7 @@ export { shuffle } from "./collections/shuffle.js";
 export { takeLastItem } from "./collections/takeLastItem.js";
 export { takeLastItems } from "./collections/takeLastItems.js";
 export { tryPeekItem } from "./collections/tryPeekItem.js";
+export { tryTakeItem } from "./collections/tryTakeItem.js";
 
 export { emitEvent } from "./events/emitEvent.js";
 export { emitEventToOtherPlayer } from "./events/emitEventToOtherPlayer.js";
@@ -45,6 +46,7 @@ export { tryGetPlayerTwo } from "./players/tryGetPlayerTwo.js";
 export { updatePlayer } from "./players/updatePlayer.js";
 export { updatePlayers } from "./players/updatePlayers.js";
 
+export { assertNever } from "./assertNever.js";
 export { createClientFactory } from "./createClientFactory.js";
 export { createManagerFactory } from "./createManagerFactory.js";
 export { createServerFactory } from "./createServerFactory.js";
